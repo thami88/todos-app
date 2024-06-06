@@ -10,9 +10,11 @@ class PageHomeController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
-        $courses = Course::all();
+        $courses = Course::query()
+            ->whereNotNull('released_at')
+            ->get();
         return view('home', compact('courses'));
     }
 }
