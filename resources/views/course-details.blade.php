@@ -9,6 +9,10 @@
 <p>
     {{$course->description}}
 </p>
+<p>
+    {{count($course->videos)}}videos
+</p>
+
 
 <ul>
     @foreach ($course->learnings as $learning)
