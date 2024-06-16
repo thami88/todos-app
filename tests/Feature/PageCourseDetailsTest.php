@@ -8,37 +8,39 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
 
+it('does not find unreleased course', function () {
+    // Arrange
+    $course = Course::factory()
+        ->create();
+    // Act & Assert
+    get(route('course-details', $course))
+        ->assertNotFound();
+});
+
 it('shows course details', function () {
     // Arrange
-    $course = Course::factory()->create([
-        'tagline' => 'Course tagline',
-        'image' => 'image.png',
-        'learnings' => [
-            'learn laravel routes',
-            'learn laravel views',
-            'learn laravel commands',
-        ],
-    ]);
+    $course = Course::factory()
+        ->released()
+        ->create();
     // Act & Assert
     get(route('course-details', $course))
         ->assertOk()
         ->assertSeeText([
             $course->title,
             $course->description,
-            'Course tagline',
-            'learn laravel routes',
-            'learn laravel views',
-            'learn laravel commands',
+            $course->tagline,
+            ...$course->learnings,
         ])
-        ->assertSee('image.png');
+        ->assertSee(asset("images/$course->image_name"));
 });
 
 it('shows course video count', function () {
     // Arrange
-    $course = Course::factory()->create();
-    Video::factory()->count(3)->create([
-        'course_id' => $course->id
-    ]);
+    $course = Course::factory()
+        ->has(Video::factory()->count(3))
+        ->released()
+        ->create();
+
     // Act & Assert
     get(route('course-details', $course))
         ->assertOk()

@@ -23,7 +23,7 @@ it('has videos', function () {
     // Arrange
     $course = Course::factory()->create();
     Video::factory()->count(3)->create([
-        'course_id' => $course->id
+        'course_id' => $course->id,
     ]);
 
     // act and assert
