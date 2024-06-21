@@ -13,7 +13,7 @@ it('does not find unreleased course', function () {
     $course = Course::factory()
         ->create();
     // Act & Assert
-    get(route('course-details', $course))
+    get(route('pages.course-details', $course))
         ->assertNotFound();
 });
 
@@ -23,7 +23,7 @@ it('shows course details', function () {
         ->released()
         ->create();
     // Act & Assert
-    get(route('course-details', $course))
+    get(route('pages.course-details', $course))
         ->assertOk()
         ->assertSeeText([
             $course->title,
@@ -42,7 +42,7 @@ it('shows course video count', function () {
         ->create();
 
     // Act & Assert
-    get(route('course-details', $course))
+    get(route('pages.course-details', $course))
         ->assertOk()
         ->assertSeeText('3videos');
 });
