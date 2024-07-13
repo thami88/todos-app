@@ -1,10 +1,8 @@
 <?php
 
 use App\Models\Course;
-use App\Models\User;
 
 use function Pest\Laravel\get;
-
 
 it('gives back successful response for home page', function () {
     // Act & Assert
@@ -26,4 +24,10 @@ it('gives back sucessful response for dashboard page', function () {
     LoginAsUser();
     get(route('pages.dashboard'))
         ->assertOk();
+});
+
+it('does not find JetStream registraation page', function () {
+    // Act & Assert
+    get('register')
+        ->assertNotFound();
 });
