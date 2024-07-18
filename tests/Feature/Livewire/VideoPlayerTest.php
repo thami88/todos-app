@@ -5,32 +5,24 @@ use App\Models\Course;
 use App\Models\Video;
 use Livewire\Livewire;
 
-use function Pest\Laravel\get;
-
 it('shows details for given video', function () {
     // Arrange
     $course = Course::factory()
-        ->has(Video::factory()
-            ->state(
-                [
-                    'title' => 'Video title',
-                    'description' => 'Video Description',
-                    'duration' => 10
-                ]
-            ))
+        ->has(Video::factory())
         ->create();
 
     // Act & Assert
+    $video = $course->videos->first();
     Livewire::test(
         VideoPlayer::class,
         [
-            'video' => $course->videos->first()
+            'video' => $video
         ]
     )->assertSeeText(
         [
-            'Video title',
-            'Video Description',
-            '10 min'
+            $video->title,
+            $video->Description,
+            "({$video->duration_in_mins}min)"
         ]
     );
 });
@@ -38,18 +30,14 @@ it('shows details for given video', function () {
 it('shows given video', function () {
     // Arrange
     $course = Course::factory()
-        ->has(Video::factory()
-            ->state(
-                [
-                    'vimeo_id' => 'vimeo-id',
-                ]
-            ))
+        ->has(Video::factory())
         ->create();
     // Act $ Assert
+    $video = $course->videos->first();
     Livewire::test(
         VideoPlayer::class,
         [
-            'video' => $course->videos->first()
+            'video' => $video
         ]
-    )->assertSee('<iframe src="https://player.vimeo.com/video/vimeo-id"', false);
+    )->assertSeeHtml('<iframe src="https://player.vimeo.com/video/' . $video->vimeo_id . '"');
 });
